@@ -22,20 +22,20 @@ if(strlen($contact_id) > 0) {
 		. " facebook, linkedin) VALUES(".$group_id.", '".$first_name."', '".$last_name."', '".$email_address."', "
 		. " '".$home_phone."', '".$work_phone."', '".$twitter."', '".$facebook."', '".$linkedin."')";
 }
-$result = mysqli_query($sql) or die("Could not edit contact in database");
-if(mysqli_affected_rows() > 0 && $_POST['edit_contact_ajax'] == "0") {
+$result = mysqli_query($conn, $sql) or die("Could not edit contact in database");
+if(mysqli_affected_rows($conn) > 0 && $_POST['edit_contact_ajax'] == "0") {
 	header("Location: ../index.html");
 } else {
 	header('Content-Type: application/json; charset=utf8');
 	$data = array();
-	if(mysqli_affected_rows() > 0) {
+	if(mysqli_affected_rows($conn) > 0) {
 		$data['success'] = true;
 		if(strlen($contact_id) > 0) { 
 			$data['new_contact'] = false;
 			$data['id'] = $contact_id;
 		} else {
 			$data['new_contact'] = true;
-			$data['id'] = mysqli_insert_id();
+			$data['id'] = mysqli_insert_id($conn);
 		}
 		$data['name'] = $first_name+" "+$last_name;
 	} else {
